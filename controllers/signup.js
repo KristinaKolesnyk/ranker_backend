@@ -1,5 +1,6 @@
 const handleSignup = (req, res, db, bcrypt) => {
     const {email, password, name} = req.body;
+
     const hash = bcrypt.hashSync(password);
      db.transaction(trx => {
         trx.insert({
