@@ -32,26 +32,32 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const UPLOAD_DIR = path.join(__dirname, 'uploads');
-if(!fs.existsSync(UPLOAD_DIR)){
+if (!fs.existsSync(UPLOAD_DIR)) {
     fs.mkdirSync(UPLOAD_DIR);
 }
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) =>{
+    destination: (req, file, cb) => {
         cb(null, UPLOAD_DIR);
     },
-    filename: (req, file, cb) =>{
+    filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname));
     }
 })
 
 const upload = multer({storage: storage});
 
-app.post('/signin', (req, res) => {signin.handleSignin(req, res, db, bcrypt)})
-app.post('/signup', (req, res) => { signup.handleSignup(req, res, db, bcrypt) })
-app.get('/profile/:id', (req, res) => {profile.handleProfileGet(req, res, db)})
+app.post('/signin', (req, res) => {
+    signin.handleSignin(req, res, db, bcrypt)
+})
+app.post('/signup', (req, res) => {
+    signup.handleSignup(req, res, db, bcrypt)
+})
+app.get('/profile/:id', (req, res) => {
+    profile.handleProfileGet(req, res, db)
+})
 
-app.put('/image', (req, res) => {
+/*app.put('/image', (req, res) => {
     const {id} = req.body;
     db('users').where('id', '=', id)
     .increment('entries', 1)
@@ -60,7 +66,7 @@ app.put('/image', (req, res) => {
         res.json(entries[0].entries);
     })
     .catch(err => res.status(400).json('Unable to get entries'))
-})
+})*/
 
 app.post('/upload', upload.single('file'), (req, res) => {
     try {
@@ -74,6 +80,51 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 app.use('/uploads', express.static(UPLOAD_DIR));
 
+
+app.post('/creatlist', (req, res) => {
+    const {categoryName, criteriaName, userId} = req.body;
+
+    db.transaction(trx => {
+        trx.insert({
+            name: categoryName
+        })
+            .into('category')
+            .returning('id')
+            .then(categoryId => {
+                trx('collection')
+                    .returning('*')
+                    .insert({
+                        category_id: categoryId[0].id,
+                        user_id: userId
+                    })
+                    .then(category => {
+                        res.json(category[0]);
+                    })
+            })
+            .then(trx.commit)
+            .catch(trx.rollback)
+    }).catch(err => res.status(400).json('Unable to register'))
+
+})
+/*
+app.post('/creatlist', (req, res) => {
+    const {name, categoryId} = req.body;
+
+    db.transaction(trx => {
+        trx.insert({
+            name: name,
+            category_id: categoryId
+        })
+            .into('criterion')
+            .returning('*')
+            .then(criterion => {
+                res.json(criterion[0]);
+            })
+            .then(trx.commit)
+            .catch(trx.rollback)
+    }).catch(err => res.status(400).json('Unable to register'))
+})
+*/
 
 app.listen(3000, () => {
     console.log('Server started on port 3000');
