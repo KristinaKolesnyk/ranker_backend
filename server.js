@@ -57,17 +57,6 @@ app.get('/profile/:id', (req, res) => {
     profile.handleProfileGet(req, res, db)
 })
 
-/*app.put('/image', (req, res) => {
-    const {id} = req.body;
-    db('users').where('id', '=', id)
-    .increment('entries', 1)
-    .returning('entries')
-    .then(entries => {
-        res.json(entries[0].entries);
-    })
-    .catch(err => res.status(400).json('Unable to get entries'))
-})*/
-
 app.post('/upload', upload.single('file'), (req, res) => {
     try {
         const filePath = req.file.path;
@@ -80,7 +69,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 app.use('/uploads', express.static(UPLOAD_DIR));
 
-
 app.post('/creatlist', (req, res) => {
     const {categoryName, criteriaName, userId} = req.body;
 
@@ -91,40 +79,36 @@ app.post('/creatlist', (req, res) => {
             .into('category')
             .returning('id')
             .then(categoryId => {
-                trx('collection')
+                const category_id = categoryId[0].id
+
+                return trx('collection')
                     .returning('*')
                     .insert({
-                        category_id: categoryId[0].id,
+                        category_id,
                         user_id: userId
                     })
-                    .then(category => {
-                        res.json(category[0]);
+                    .then(collection => {
+                        const criteriaInsertPromises = criteriaName.map(criterion =>
+                         trx('criterion')
+                            .returning('*')
+                            .insert({
+                                name: criterion,
+                                category_id
+                            })
+                        )
+                        return Promise.all(criteriaInsertPromises)
+                            .then(criteria => {
+                                res.json({
+                                    collection: collection[0],
+                                    criterion: criteria.map(criterion => criterion[0])
+                                })
+                            })
                     })
             })
             .then(trx.commit)
             .catch(trx.rollback)
     }).catch(err => res.status(400).json('Unable to register'))
-
 })
-/*
-app.post('/creatlist', (req, res) => {
-    const {name, categoryId} = req.body;
-
-    db.transaction(trx => {
-        trx.insert({
-            name: name,
-            category_id: categoryId
-        })
-            .into('criterion')
-            .returning('*')
-            .then(criterion => {
-                res.json(criterion[0]);
-            })
-            .then(trx.commit)
-            .catch(trx.rollback)
-    }).catch(err => res.status(400).json('Unable to register'))
-})
-*/
 
 app.listen(3000, () => {
     console.log('Server started on port 3000');
