@@ -10,6 +10,8 @@ const fs = require('fs');
 const signup = require('./controllers/signup');
 const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
+const creatlist = require('./controllers/creatlist');
+const upload = require('./controllers/upload');
 
 const db = knex({
     client: 'pg',
@@ -31,22 +33,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
-const UPLOAD_DIR = path.join(__dirname, 'uploads');
-if (!fs.existsSync(UPLOAD_DIR)) {
-    fs.mkdirSync(UPLOAD_DIR);
-}
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, UPLOAD_DIR);
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
-    }
-})
-
-const upload = multer({storage: storage});
-
 app.post('/signin', (req, res) => {
     signin.handleSignin(req, res, db, bcrypt)
 })
@@ -56,60 +42,11 @@ app.post('/signup', (req, res) => {
 app.get('/profile/:id', (req, res) => {
     profile.handleProfileGet(req, res, db)
 })
-
-app.post('/upload', upload.single('file'), (req, res) => {
-    try {
-        const filePath = req.file.path;
-        res.json({imageUrl: `http://localhost:3000/${filePath}`});
-    } catch (err) {
-        console.error(err);
-        res.status(500).json('Error uploading file');
-    }
-})
-
-app.use('/uploads', express.static(UPLOAD_DIR));
-
-//upload to database
 app.post('/creatlist', (req, res) => {
-    const {categoryName, criteriaName, userId} = req.body;
-
-    db.transaction(trx => {
-        trx.insert({
-            name: categoryName
-        })
-            .into('category')
-            .returning('id')
-            .then(categoryId => {
-                const category_id = categoryId[0].id
-
-                return trx('collection')
-                    .returning('*')
-                    .insert({
-                        category_id,
-                        user_id: userId
-                    })
-                    .then(collection => {
-                        const criteriaInsertPromises = criteriaName.map(criterion =>
-                            trx('criterion')
-                                .returning('*')
-                                .insert({
-                                    name: criterion,
-                                    category_id
-                                })
-                        )
-                        return Promise.all(criteriaInsertPromises)
-                            .then(criteria => {
-                                res.json({
-                                    collection: collection[0],
-                                    criterion: criteria.map(criterion => criterion[0])
-                                })
-                            })
-                    })
-            })
-            .then(trx.commit)
-            .catch(trx.rollback)
-    }).catch(err => res.status(400).json('Unable to register'))
+    creatlist.handleCreatList(req, res, db)
 })
+app.post('/upload', upload.upload.single('file'), upload.handleFileUpload)
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.post('/addtolist', (req, res) => {
     const {itemName, collectionId, itemUrl, itemAvgRating, ratingValue, criterionIds} = req.body;
