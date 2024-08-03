@@ -12,6 +12,7 @@ const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
 const creatlist = require('./controllers/creatlist');
 const upload = require('./controllers/upload');
+const addtolist = require('./controllers/addtolist')
 
 const db = knex({
     client: 'pg',
@@ -49,50 +50,7 @@ app.post('/upload', upload.upload.single('file'), upload.handleFileUpload)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.post('/addtolist', (req, res) => {
-    const {itemName, collectionId, itemUrl, itemAvgRating, ratingValue, criterionIds} = req.body;
-
-    if (!Array.isArray(criterionIds) || criterionIds.length !== ratingValue.length) {
-        return res.status(400).json('Mismatched criteria and ratings');
-    }
-
-    db.transaction(trx => {
-        trx.insert({
-            name: itemName,
-            collection_id: collectionId,
-            url: itemUrl,
-            avg_rating: itemAvgRating
-        })
-            .into('item')
-            .returning('id')
-            .then(itemIds => {
-                const item_id = itemIds[0].id;
-
-                const ratingInsertPromises = ratingValue.map((rating, index) => (
-                    trx('rating')
-                        .returning('*')
-                        .insert({
-                            item_id,
-                            value: rating,
-                            criterion_id: criterionIds[index]
-                        })
-                ))
-                return Promise.all(ratingInsertPromises)
-                    .then(ratingResults => {
-                        res.json({
-                            newItem: {
-                                id: item_id,
-                                name: itemName,
-                                collection_id: collectionId,
-                                url: itemUrl,
-                                avg_rating: itemAvgRating,
-                                ratings: ratingResults.map(result => result[0])
-                            }
-                        })
-                    })
-            })
-            .then(trx.commit)
-            .catch(trx.rollback)
-    }).catch(err => res.status(400).json('Unable to register'))
+    addtolist.handleAddToList(req, res, db)
 })
 
 
