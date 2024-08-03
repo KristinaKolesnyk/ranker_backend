@@ -4,11 +4,9 @@ const { join } = require('path');
 const handleSignup = (req, res, db, bcrypt) => {
     const { email, password, name } = req.body;
 
-    // Проверка обязательных полей
     if (!email || !password || !name) {
         return res.status(400).json('Please provide all required fields.');
     }
-
 
     const hash = bcrypt.hashSync(password);
 
