@@ -69,6 +69,7 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 app.use('/uploads', express.static(UPLOAD_DIR));
 
+//upload to database
 app.post('/creatlist', (req, res) => {
     const {categoryName, criteriaName, userId} = req.body;
 
@@ -89,12 +90,12 @@ app.post('/creatlist', (req, res) => {
                     })
                     .then(collection => {
                         const criteriaInsertPromises = criteriaName.map(criterion =>
-                         trx('criterion')
-                            .returning('*')
-                            .insert({
-                                name: criterion,
-                                category_id
-                            })
+                            trx('criterion')
+                                .returning('*')
+                                .insert({
+                                    name: criterion,
+                                    category_id
+                                })
                         )
                         return Promise.all(criteriaInsertPromises)
                             .then(criteria => {
@@ -109,6 +110,54 @@ app.post('/creatlist', (req, res) => {
             .catch(trx.rollback)
     }).catch(err => res.status(400).json('Unable to register'))
 })
+
+app.post('/addtolist', (req, res) => {
+    const {itemName, collectionId, itemUrl, itemAvgRating, ratingValue, criterionIds} = req.body;
+
+    if (!Array.isArray(criterionIds) || criterionIds.length !== ratingValue.length) {
+        return res.status(400).json('Mismatched criteria and ratings');
+    }
+
+    db.transaction(trx => {
+        trx.insert({
+            name: itemName,
+            collection_id: collectionId,
+            url: itemUrl,
+            avg_rating: itemAvgRating
+        })
+            .into('item')
+            .returning('id')
+            .then(itemIds => {
+                const item_id = itemIds[0].id;
+
+                const ratingInsertPromises = ratingValue.map((rating, index) => (
+                    trx('rating')
+                        .returning('*')
+                        .insert({
+                            item_id,
+                            value: rating,
+                            criterion_id: criterionIds[index]
+                        })
+                ))
+                return Promise.all(ratingInsertPromises)
+                    .then(ratingResults => {
+                        res.json({
+                            newItem: {
+                                id: item_id,
+                                name: itemName,
+                                collection_id: collectionId,
+                                url: itemUrl,
+                                avg_rating: itemAvgRating,
+                                ratings: ratingResults.map(result => result[0])
+                            }
+                        })
+                    })
+            })
+            .then(trx.commit)
+            .catch(trx.rollback)
+    }).catch(err => res.status(400).json('Unable to register'))
+})
+
 
 app.listen(3000, () => {
     console.log('Server started on port 3000');
