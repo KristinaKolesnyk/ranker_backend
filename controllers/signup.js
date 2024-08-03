@@ -9,7 +9,7 @@ const handleSignup = (req, res, db, bcrypt) => {
         return res.status(400).json('Please provide all required fields.');
     }
 
-    // Хеширование пароля
+
     const hash = bcrypt.hashSync(password);
 
     db.transaction(trx => {
