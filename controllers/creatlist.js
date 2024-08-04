@@ -1,5 +1,8 @@
+const { readFileSync } = require('fs');
+const { join } = require('path');
+
 const handleCreatList = (req, res, db) => {
-    const { categoryName, criteriaName, userId } = req.body;
+    const { categoryName, criteriaName, userId, iconUrl} = req.body;
 
     db.transaction(trx => {
         // Проверка, существует ли коллекция для данного пользователя
@@ -15,7 +18,8 @@ const handleCreatList = (req, res, db) => {
                         .returning('id')
                         .insert({
                             name: categoryName,
-                            collection_id: collection_id
+                            collection_id: collection_id,
+                            icon: iconUrl
                         })
                         .then(categoryId => {
                             const category_id = categoryId[0].id;
@@ -52,7 +56,8 @@ const handleCreatList = (req, res, db) => {
                                 .returning('id')
                                 .insert({
                                     name: categoryName,
-                                    collection_id: collection_id
+                                    collection_id: collection_id,
+                                    icon: iconUrl
                                 })
                                 .then(categoryId => {
                                     const category_id = categoryId[0].id;
@@ -70,7 +75,7 @@ const handleCreatList = (req, res, db) => {
                                         .then(criteria => {
                                             res.json({
                                                 collection: { id: collection_id },
-                                                category: { id: category_id, name: categoryName },
+                                                category: { id: category_id, name: categoryName},
                                                 criteria: criteria.map(criterion => criterion[0])
                                             });
                                         });

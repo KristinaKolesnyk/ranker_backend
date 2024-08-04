@@ -68,10 +68,12 @@ const addDefaultDataForUser = (trx, userId) => {
 
             // Вставляем категории и получаем их ID
             const categoryPromises = Object.keys(defaultData.itemsByCategory).map(categoryName => {
+                const icon = defaultData.iconsByCategory[categoryName] || '/data/img/default_icon.png';
                 return trx('category')
                     .returning('id')
                     .insert({
                         name: categoryName,
+                        icon: icon,
                         collection_id
                     })
                     .then(categoryId => {
@@ -101,8 +103,9 @@ const addDefaultDataForUser = (trx, userId) => {
                                 .returning('id')
                                 .insert({
                                     name: item.name,
-                                    url: item.URL, // Исправлено на 'url'
-                                    category_id
+                                    url: item.URL,
+                                    category_id,
+                                    avg_rating: item.avgRating
                                 })
                                 .then(itemId => {
                                     const item_id = itemId[0].id;

@@ -12,15 +12,16 @@ const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
 const creatlist = require('./controllers/creatlist');
 const upload = require('./controllers/upload');
-const addtolist = require('./controllers/addtolist')
+const addToList = require('./controllers/addToList')
+const getCategories = require('./controllers/getCategories')
 
 const db = knex({
     client: 'pg',
     connection: {
         host: '127.0.0.1',
-        user: 'postgres',
+        user: 'krisya',
         port: 5432,
-        password: '13346939',
+        password: '',
         database: 'rankerdb'
     }
 })
@@ -34,6 +35,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(cors());
 
+app.use('/data/img', express.static(path.join(__dirname, '/data/img')))
 app.post('/signin', (req, res) => {
     signin.handleSignin(req, res, db, bcrypt)
 })
@@ -47,10 +49,12 @@ app.post('/creatlist', (req, res) => {
     creatlist.handleCreatList(req, res, db)
 })
 app.post('/upload', upload.upload.single('file'), upload.handleFileUpload)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+//app.use('/data/img', express.static(path.join(__dirname, '/data/img')));
 app.post('/addtolist', (req, res) => {
-    addtolist.handleAddToList(req, res, db)
+    addToList.handleAddToList(req, res, db)
+})
+app.get('/categories/:userId', (req, res) => {
+    getCategories.handleGetCategories(req, res, db)
 })
 
 
