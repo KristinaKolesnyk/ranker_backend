@@ -15,6 +15,7 @@ const handleGetCategoryData = (req, res, db) => {
                     trx('item')
                         .leftJoin('rating', 'item.id', 'rating.item_id')
                         .where('item.category_id', categoryId)
+                        .orderBy('item.avg_rating', 'desc')
                         .select(
                             'item.id as itemId',
                             'item.name as itemName',
