@@ -15,6 +15,7 @@ const upload = require('./controllers/upload');
 const addItemToList = require('./controllers/addItemToList')
 const getCategories = require('./controllers/getCategories')
 const getCategoryData = require('./controllers/getCategoryData')
+const deleteItem = require('./controllers/deleteItem')
 
 const db = knex({
     client: 'pg',
@@ -59,7 +60,9 @@ app.get('/categories/:userId', (req, res) => {
 app.get('/category/:categoryId', (req, res) => {
     getCategoryData.handleGetCategoryData(req, res, db)
 })
-
+app.delete('/deleteitem/:itemId', (req, res) => {
+    deleteItem.handleDeleteItem(req, res, db)
+})
 
 app.listen(3000, () => {
     console.log('Server started on port 3000');
