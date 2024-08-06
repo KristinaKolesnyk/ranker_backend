@@ -5,14 +5,13 @@ const handleGetCategoryData = (req, res, db) => {
         trx('category')
             .where('category.id', categoryId)
             .first()
-            .transacting(trx)
             .then(category => {
                 if (!category) {
                     throw new Error(`Category ${categoryId} not found`);
                 }
                 return Promise.all([
                     category,
-                    trx('criterion').where('category_id', categoryId).transacting(trx),
+                    trx('criterion').where('category_id', categoryId),
                     trx('item')
                         .leftJoin('rating', 'item.id', 'rating.item_id')
                         .where('item.category_id', categoryId)
@@ -24,12 +23,10 @@ const handleGetCategoryData = (req, res, db) => {
                             'rating.value as ratingValue',
                             'rating.criterion_id'
                         )
-                        .transacting(trx)
                 ]);
             })
             .then(([category, criteria, itemRatings]) => {
                 const items = {};
-
                 itemRatings.forEach(row => {
                     if (!items[row.itemId]) {
                         items[row.itemId] = {
@@ -39,15 +36,14 @@ const handleGetCategoryData = (req, res, db) => {
                             avg_rating: row.avg_rating,
                             criterions: criteria.map(c => ({
                                 criterion_id: c.id,
-                                // value: c.id.value
+                                value: '-'
                             }))
                         };
                     }
-
                     if (row.criterion_id) {
-                        const criterion = items[row.itemId].criterions.find(c => c.criterion_id === row.criterion_id);
+                        const criterion = items[row.itemId].criterions.find(c => c.criterion_id.toString() === row.criterion_id.toString());
                         if (criterion) {
-                            criterion.value = row.ratingValue;
+                            criterion.value = row.ratingValue || '-';
                         }
                     }
                 });

@@ -1,0 +1,51 @@
+const handleAddItemToList = (req, res, db) => {
+    const {categoryId, name, url, ratings} = req.body;
+
+    const calculateAverageRating = (ratings) => {
+        const numericRatings = ratings.map(r => parseFloat(r)).filter(r => !isNaN(r));
+        const sum = numericRatings.reduce((acc, val) => acc + val, 0);
+        const average = numericRatings.length > 0 ? sum / numericRatings.length : 0;
+        return parseFloat(average.toFixed(1));
+    }
+
+    const avgRating = calculateAverageRating(ratings);
+
+    db.transaction(trx => {
+        trx('item')
+            .returning('id')
+            .insert({
+                name: name,
+                url: url || null,
+                avg_rating: avgRating,
+                category_id: categoryId
+            })
+            .then(itemId => {
+                const item_id = itemId[0].id;
+                return trx('criterion')
+                    .where({category_id: categoryId})
+                    .select('id')
+                    .then(criteria => {
+                        const ratingPromises = ratings.map((rating, index) => {
+                            if (criteria[index]) {
+                                return trx('rating')
+                                    .insert({
+                                        value: rating,
+                                        item_id,
+                                        criterion_id: criteria[index].id
+                                    })
+                            }
+                        })
+                        return Promise.all(ratingPromises)
+                    });
+            }).then(trx.commit)
+            .catch(trx.rollback);
+    }).then(() => res.status(200).json('Item added successfully'))
+        .catch(err => {
+            console.error('Error adding item to list:', err);
+            res.status(400).json('Error adding item to list.')
+        })
+}
+
+module.exports = {
+    handleAddItemToList:handleAddItemToList
+};

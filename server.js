@@ -12,7 +12,7 @@ const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
 const creatlist = require('./controllers/creatlist');
 const upload = require('./controllers/upload');
-const addToList = require('./controllers/addToList')
+const addItemToList = require('./controllers/addItemToList')
 const getCategories = require('./controllers/getCategories')
 const getCategoryData = require('./controllers/getCategoryData')
 
@@ -50,9 +50,8 @@ app.post('/creatlist', (req, res) => {
     creatlist.handleCreatList(req, res, db)
 })
 app.post('/upload', upload.upload.single('file'), upload.handleFileUpload)
-//app.use('/data/img', express.static(path.join(__dirname, '/data/img')));
 app.post('/addtolist', (req, res) => {
-    addToList.handleAddToList(req, res, db)
+    addItemToList.handleAddItemToList(req, res, db)
 })
 app.get('/categories/:userId', (req, res) => {
     getCategories.handleGetCategories(req, res, db)
