@@ -14,6 +14,7 @@ const creatlist = require('./controllers/creatlist');
 const upload = require('./controllers/upload');
 const addToList = require('./controllers/addToList')
 const getCategories = require('./controllers/getCategories')
+const getCategoryData = require('./controllers/getCategoryData')
 
 const db = knex({
     client: 'pg',
@@ -55,6 +56,9 @@ app.post('/addtolist', (req, res) => {
 })
 app.get('/categories/:userId', (req, res) => {
     getCategories.handleGetCategories(req, res, db)
+})
+app.get('/category/:categoryId', (req, res) => {
+    getCategoryData.handleGetCategoryData(req, res, db)
 })
 
 
