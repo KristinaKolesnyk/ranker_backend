@@ -3,9 +3,9 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
 const knex = require('knex');
-const multer = require('multer');
+//const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+//const fs = require('fs');
 
 const signup = require('./controllers/signup');
 const signin = require('./controllers/signin');
@@ -16,6 +16,7 @@ const addItemToList = require('./controllers/addItemToList')
 const getCategories = require('./controllers/getCategories')
 const getCategoryData = require('./controllers/getCategoryData')
 const deleteItem = require('./controllers/deleteItem')
+const editItem = require('./controllers/editItem')
 
 const db = knex({
     client: 'pg',
@@ -62,6 +63,9 @@ app.get('/category/:categoryId', (req, res) => {
 })
 app.delete('/deleteitem/:itemId', (req, res) => {
     deleteItem.handleDeleteItem(req, res, db)
+})
+app.put('/edititem', (req, res) => {
+    editItem.handleEditItem(req, res, db)
 })
 
 app.listen(3000, () => {
