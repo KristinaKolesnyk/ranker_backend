@@ -16,6 +16,7 @@ const addItemToList = require('./controllers/addItemToList')
 const getCategories = require('./controllers/getCategories')
 const getCategoryData = require('./controllers/getCategoryData')
 const deleteItem = require('./controllers/deleteItem')
+const deleteCategory = require('./controllers/deleteCategory')
 const editItem = require('./controllers/editItem')
 
 const db = knex({
@@ -63,6 +64,10 @@ app.get('/category/:categoryId', (req, res) => {
 })
 app.delete('/deleteitem/:itemId', (req, res) => {
     deleteItem.handleDeleteItem(req, res, db)
+})
+
+app.delete('/category/:id', (req, res) => {
+    deleteCategory.handleDeleteCategory(req, res, db)
 })
 app.put('/edititem', (req, res) => {
     editItem.handleEditItem(req, res, db)
