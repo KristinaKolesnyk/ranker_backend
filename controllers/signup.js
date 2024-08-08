@@ -7,6 +7,10 @@ const handleSignup = (req, res, db, bcrypt) => {
     if (!email || !password || !name) {
         return res.status(400).json('Please provide all required fields.');
     }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json('Invalid email format.');
+    }
 
     const hash = bcrypt.hashSync(password);
 
