@@ -3,9 +3,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcryptjs');
 const cors = require('cors');
 const knex = require('knex');
-//const multer = require('multer');
 const path = require('path');
-//const fs = require('fs');
 
 const signup = require('./controllers/signup');
 const signin = require('./controllers/signin');
@@ -18,6 +16,7 @@ const getCategoryData = require('./controllers/getCategoryData')
 const deleteItem = require('./controllers/deleteItem')
 const deleteCategory = require('./controllers/deleteCategory')
 const editItem = require('./controllers/editItem')
+const updateWinner = require('./controllers/updateWinner')
 
 const db = knex({
     client: 'pg',
@@ -72,7 +71,9 @@ app.delete('/category/:id', (req, res) => {
 app.put('/edititem', (req, res) => {
     editItem.handleEditItem(req, res, db)
 })
-
 app.listen(3000, () => {
     console.log('Server started on port 3000');
+})
+app.post('/updatewinner', (req, res) => {
+    updateWinner.handleUpdateWinner(req, res, db)
 })

@@ -23,10 +23,11 @@ const handleGetCategoryData = (req, res, db) => {
                             'item.avg_rating',
                             'rating.value as ratingValue',
                             'rating.criterion_id'
-                        )
+                        ),
+                    trx('item').where('id', category.winner_id).first()
                 ]);
             })
-            .then(([category, criteria, itemRatings]) => {
+            .then(([category, criteria, itemRatings, winner]) => {
                 const items = {};
                 itemRatings.forEach(row => {
                     if (!items[row.itemId]) {
@@ -52,7 +53,8 @@ const handleGetCategoryData = (req, res, db) => {
                 res.json({
                     category,
                     criteria,
-                    items: Object.values(items)
+                    items: Object.values(items),
+                    winner: winner || null
                 });
             })
             .then(trx.commit)
