@@ -2,6 +2,10 @@ const {calculateAverageRating} = require('../controllers/utils');
 
 const handleAddItemToList = (req, res, db) => {
     const {categoryId, name, url, ratings} = req.body;
+    // Проверка на пустые данные
+    if (!categoryId || !name || !ratings || ratings.length === 0) {
+        return res.status(400).json('Category ID, name, and ratings are required.');
+    }
     const avgRating = calculateAverageRating(ratings);
 
     db.transaction(trx => {

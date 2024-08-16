@@ -2,7 +2,12 @@ const { readFileSync } = require('fs');
 const { join } = require('path');
 
 const handleCreatList = (req, res, db) => {
-    const { categoryName, criteriaName, userId, iconUrl} = req.body;
+    const { categoryName, criteriaName, userId, iconUrl } = req.body;
+
+    // Проверка на пустые данные
+    if (!categoryName || !criteriaName || !iconUrl) {
+        return res.status(400).json('Category name, criteria names, and icon URL are required');
+    }
 
     db.transaction(trx => {
         // Проверка, существует ли коллекция для данного пользователя
@@ -22,6 +27,9 @@ const handleCreatList = (req, res, db) => {
                             icon: iconUrl
                         })
                         .then(categoryId => {
+                            if (!categoryId || categoryId.length === 0) {
+                                throw new Error('Category insertion failed');
+                            }
                             const category_id = categoryId[0].id;
 
                             const criteriaInsertPromises = criteriaName.map(criterion =>
@@ -50,6 +58,9 @@ const handleCreatList = (req, res, db) => {
                             user_id: userId
                         })
                         .then(collectionId => {
+                            if (!collectionId || collectionId.length === 0) {
+                                throw new Error('Collection insertion failed');
+                            }
                             const collection_id = collectionId[0].id;
 
                             return trx('category')
@@ -60,6 +71,9 @@ const handleCreatList = (req, res, db) => {
                                     icon: iconUrl
                                 })
                                 .then(categoryId => {
+                                    if (!categoryId || categoryId.length === 0) {
+                                        throw new Error('Category insertion failed');
+                                    }
                                     const category_id = categoryId[0].id;
 
                                     const criteriaInsertPromises = criteriaName.map(criterion =>
@@ -75,7 +89,7 @@ const handleCreatList = (req, res, db) => {
                                         .then(criteria => {
                                             res.json({
                                                 collection: { id: collection_id },
-                                                category: { id: category_id, name: categoryName},
+                                                category: { id: category_id, name: categoryName },
                                                 criteria: criteria.map(criterion => criterion[0])
                                             });
                                         });
@@ -85,10 +99,8 @@ const handleCreatList = (req, res, db) => {
             })
             .then(trx.commit)
             .catch(trx.rollback);
-    }).catch(err => res.status(400).json('Unable to create list'));
+    }).catch(err => res.status(400).json(`Unable to create list: ${err.message}`));
 };
-
-
 
 module.exports = {
     handleCreatList: handleCreatList
