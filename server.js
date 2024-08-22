@@ -25,7 +25,7 @@ const db = knex({
         user: 'krisya',
         port: 5432,
         password: '',
-        database: 'rankerdb'
+        database: 'postgres'
     }
 })
 
