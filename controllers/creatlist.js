@@ -3,20 +3,17 @@ const { join } = require('path');
 
 const handleCreatList = (req, res, db) => {
     const { categoryName, criteriaName, userId, iconUrl } = req.body;
-
-    // Проверка на пустые данные
     if (!categoryName || !criteriaName || !iconUrl) {
         return res.status(400).json('Category name, criteria names, and icon URL are required');
     }
 
     db.transaction(trx => {
-        // Проверка, существует ли коллекция для данного пользователя
+
         trx('collection')
             .where({ user_id: userId })
             .first()
             .then(existingCollection => {
                 if (existingCollection) {
-                    // Коллекция существует, используем её collection_id
                     const collection_id = existingCollection.id;
 
                     return trx('category')
@@ -51,7 +48,7 @@ const handleCreatList = (req, res, db) => {
                                 });
                         });
                 } else {
-                    // Коллекция не существует, создаем новую коллекцию
+
                     return trx('collection')
                         .returning('id')
                         .insert({
