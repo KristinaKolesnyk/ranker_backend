@@ -1,7 +1,7 @@
 const { readFileSync } = require('fs');
 const { join } = require('path');
 
-const handleCreatList = (req, res, db) => {
+const handleCreateList = (req, res, db) => {
     const { categoryName, criteriaName, userId, iconUrl } = req.body;
     if (!categoryName || !criteriaName || !iconUrl) {
         return res.status(400).json('Category name, criteria names, and icon URL are required');
@@ -100,5 +100,5 @@ const handleCreatList = (req, res, db) => {
 };
 
 module.exports = {
-    handleCreatList: handleCreatList
+    handleCreateList: handleCreateList
 };

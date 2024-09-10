@@ -8,7 +8,7 @@ const path = require('path');
 const signup = require('./controllers/signup');
 const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
-const creatlist = require('./controllers/creatlist');
+const createList = require('./controllers/createlist');
 const upload = require('./controllers/upload');
 const addItemToList = require('./controllers/addItemToList')
 const getCategories = require('./controllers/getCategories')
@@ -49,8 +49,8 @@ app.post('/signup', (req, res) => {
 app.get('/profile/:id', (req, res) => {
     profile.handleProfileGet(req, res, db)
 })
-app.post('/creatlist', (req, res) => {
-    creatlist.handleCreatList(req, res, db)
+app.post('/createlist', (req, res) => {
+    createList.handleCreateList(req, res, db)
 })
 app.post('/upload', upload.upload.single('file'), upload.handleFileUpload)
 app.post('/addtolist', (req, res) => {
