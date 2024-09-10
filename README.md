@@ -1,9 +1,3 @@
-
-
-### Backend (Node.js) README
-
----
-
 # Ranker Backend
 
 This repository contains the backend for the **Ranker** project, a web application that allows users to create lists, compare items, and organize tournaments. The backend is built using **Node.js** with **Express** for handling API requests and **PostgreSQL** as the database.
@@ -30,7 +24,7 @@ This repository contains the backend for the **Ranker** project, a web applicati
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/ranker-backend.git
+   git clone https://github.com/KristinaKolesnyk/ranker_backend.git
    ```
 
 2. Navigate to the project directory:
@@ -95,12 +89,6 @@ The backend exposes several RESTful API endpoints for interacting with the datab
 
 ## Screenshots & Videos
 
-A folder called **`/screenshots`** has been added to the project root. It contains videos and images showcasing the functionality of the API, such as list creation, tournament management, and user authentication.
+A folder called **`/screenshots`** contains demo screenshots of the application.
 
-## Contributing
-
-If you'd like to contribute, feel free to fork the repository and create a pull request. All contributions are welcome!
-
----
-
-These two README files are designed to provide a comprehensive overview of both the frontend and backend systems, along with detailed steps on how to install, run, and contribute to the project.
+- **Demo Video**: You can watch the demo video on [Google Drive](https://drive.google.com/file/d/1VphzLdFyHtjBdn0MP5WybtCAW-bC7GQY/view?usp=sharing).
