@@ -6,8 +6,8 @@ This repository contains the backend for the **Ranker** project, a web applicati
 
 - [Features](#features)
 - [Tech Stack](#tech-stack)
-- [API Endpoints](#api-endpoints)
 - [Screenshots & Videos](#screenshots--videos)
+- [API Endpoints](#api-endpoints)
 - [Installation](#installation)
 - [Available Scripts](#available-scripts)
 
