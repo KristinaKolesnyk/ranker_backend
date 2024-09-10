@@ -4,12 +4,13 @@ This repository contains the backend for the **Ranker** project, a web applicati
 
 ## Table of Contents
 
+- [Uniqueness](#uniqueness)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Screenshots & Videos](#screenshots--videos)
 - [API Endpoints](#api-endpoints)
 - [Installation](#installation)
-- [Available Scripts](#available-scripts)
+- [Acknowledgements](#acknowledgements)
 
 ## Uniqueness
 
@@ -67,7 +68,7 @@ The backend exposes several RESTful API endpoints for interacting with the datab
 2. Navigate to the project directory:
 
    ```bash
-   cd ranker-backend
+   cd ranker_backend
    ```
 
 3. Install the dependencies:
@@ -89,14 +90,6 @@ The backend exposes several RESTful API endpoints for interacting with the datab
    ```
 
    The server will run on `http://localhost:3001`.
-
-## Available Scripts
-
-In the project directory, you can run:
-
-- **`npm start`**: Starts the server in development mode using **nodemon** for live reloading.
-- **`npm install`**: Installs all required dependencies.
-- **`npm run build`**: Prepares the backend for production.
 
 ## Acknowledgements
 
