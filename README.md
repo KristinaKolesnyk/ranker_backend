@@ -10,7 +10,6 @@ This repository contains the backend for the **Ranker** project, a web applicati
 - [Technologies](#technologies)
 - [API Endpoints](#api-endpoints)
 - [Screenshots & Videos](#screenshots--videos)
-- [Contributing](#contributing)
 
 ## Features
 
