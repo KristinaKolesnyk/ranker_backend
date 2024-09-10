@@ -2,16 +2,6 @@
 
 This repository contains the backend for the **Ranker** project, a web application that allows users to create lists, compare items, and organize tournaments. Built with **Node.js** and **Express**, the backend provides a secure and scalable API that enables the frontend to perform CRUD operations (Create, Read, Update, Delete) on lists and items, while also facilitating the advanced tournament ranking system.
 
-## Table of Contents
-
-- [Uniqueness](#uniqueness)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Screenshots & Videos](#screenshots--videos)
-- [API Endpoints](#api-endpoints)
-- [Installation](#installation)
-- [Acknowledgements](#acknowledgements)
-
 ## Uniqueness
 
 The **Ranker** backend stands out for its robust **tournament ranking system**, which adds an extra layer of engagement to typical item ranking. Users not only rank items based on predefined criteria but also can directly compare items in a tournament format, allowing for more engaging decision-making. Additionally, the backend architecture is designed to handle this complex comparison logic efficiently, providing real-time feedback to the frontend.
