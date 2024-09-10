@@ -78,7 +78,7 @@ The backend exposes several RESTful API endpoints for interacting with the datab
   - `POST /signup`: Register a new user.
   
 - **Lists**:
-  - `POST /creatlist`: Create a new list.
+  - `POST /createlist`: Create a new list.
   - `DELETE /deleteitem/:itemId`: Delete an item from a list.
   - `GET /categories/:userId`: Get all categories for a user.
   
