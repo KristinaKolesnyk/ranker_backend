@@ -1,8 +1,8 @@
-const { readFileSync } = require('fs');
-const { join } = require('path');
+const {readFileSync} = require('fs');
+const {join} = require('path');
 
 const handleSignup = (req, res, db, bcrypt) => {
-    const { email, password, name } = req.body;
+    const {email, password, name} = req.body;
 
     if (!email || !password || !name) {
         return res.status(400).json('Please provide all required fields.');
@@ -15,7 +15,7 @@ const handleSignup = (req, res, db, bcrypt) => {
     const hash = bcrypt.hashSync(password);
 
     db.transaction(trx => {
-        trx.insert({ hash, email })
+        trx.insert({hash, email})
             .into('login')
             .returning('email')
             .then(loginEmail => {
@@ -29,26 +29,26 @@ const handleSignup = (req, res, db, bcrypt) => {
                     .then(user => {
                         const userId = user[0].id;
 
-                        // Добавление стандартных данных
+
                         return addDefaultDataForUser(trx, userId)
                             .then(() => {
-                                trx.commit(); // Завершение транзакции
+                                trx.commit();
                                 res.json(user[0]);
                             })
                             .catch(err => {
-                                trx.rollback(); // Откат транзакции при ошибке
+                                trx.rollback();
                                 console.error('Error adding default data:', err);
                                 res.status(500).json('Error adding default data.');
                             });
                     })
                     .catch(err => {
-                        trx.rollback(); // Откат транзакции при ошибке
+                        trx.rollback();
                         console.error('Error inserting user:', err);
                         res.status(500).json('Error inserting user.');
                     });
             })
             .catch(err => {
-                trx.rollback(); // Откат транзакции при ошибке
+                trx.rollback();
                 console.error('Error inserting login:', err);
                 res.status(500).json('Error inserting login.');
             });
@@ -60,17 +60,15 @@ const handleSignup = (req, res, db, bcrypt) => {
 };
 
 const addDefaultDataForUser = (trx, userId) => {
-    // Чтение данных из файла
     const filePath = join(__dirname, '..', 'data', 'defaultData.json');
     const defaultData = JSON.parse(readFileSync(filePath, 'utf8'));
 
     return trx('collection')
         .returning('id')
-        .insert({ user_id: userId })
+        .insert({user_id: userId})
         .then(collectionId => {
             const collection_id = collectionId[0].id;
 
-            // Вставляем категории и получаем их ID
             const categoryPromises = Object.keys(defaultData.itemsByCategory).map(categoryName => {
                 const icon = defaultData.iconsByCategory[categoryName] || '/data/img/default_icon.png';
                 return trx('category')
@@ -82,8 +80,6 @@ const addDefaultDataForUser = (trx, userId) => {
                     })
                     .then(categoryId => {
                         const category_id = categoryId[0].id;
-
-                        // Вставляем критерии и получаем их ID
                         const criteria = defaultData.criteriaByCategory[categoryName];
                         const criteriaInsertPromises = criteria.map(criterion =>
                             trx('criterion')
@@ -100,7 +96,7 @@ const addDefaultDataForUser = (trx, userId) => {
                                 })
                         );
 
-                        // Вставляем элементы и связываем их с критериями
+
                         const items = defaultData.itemsByCategory[categoryName];
                         const itemInsertPromises = items.map(item =>
                             trx('item')
@@ -114,7 +110,7 @@ const addDefaultDataForUser = (trx, userId) => {
                                 .then(itemId => {
                                     const item_id = itemId[0].id;
 
-                                    // Вставляем рейтинги, используя ID критериев
+
                                     return Promise.all(
                                         criteriaInsertPromises.map((criterionPromise, index) =>
                                             criterionPromise.then(criterionData =>

@@ -8,7 +8,7 @@ const handleCreatList = (req, res, db) => {
     }
 
     db.transaction(trx => {
-        // Проверка, существует ли коллекция для данного пользователя
+
         trx('collection')
             .where({ user_id: userId })
             .first()
@@ -48,7 +48,7 @@ const handleCreatList = (req, res, db) => {
                                 });
                         });
                 } else {
-                    // Коллекция не существует, создаем новую коллекцию
+
                     return trx('collection')
                         .returning('id')
                         .insert({

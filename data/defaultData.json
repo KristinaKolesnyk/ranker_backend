@@ -86,6 +86,20 @@
         "criterions": [9, 9, 6, 8],
         "URL": "https://www.allrecipes.com/recipe/30522/marinated-flank-steak/",
         "avgRating": 8.0
+      },
+      {
+        "id": 6,
+        "name": "Tacos",
+        "criterions": [9, 8, 7, 8],
+        "URL": "https://www.allrecipes.com/recipe/23600/worlds-best-tacos/",
+        "avgRating": 8.0
+      },
+      {
+        "id": 7,
+        "name": "Ramen",
+        "criterions": [8, 7, 8, 7],
+        "URL": "https://www.allrecipes.com/recipe/260229/ramen-noodle-soup/",
+        "avgRating": 7.5
       }
     ],
     "Lovely Pets": [
@@ -123,6 +137,20 @@
         "criterions": [5, 5, 3, 5],
         "URL": "https://www.petmd.com/fish",
         "avgRating": 4.5
+      },
+      {
+        "id": 6,
+        "name": "Rabbit",
+        "criterions": [7, 6, 5, 8],
+        "URL": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits",
+        "avgRating": 6.5
+      },
+      {
+        "id": 7,
+        "name": "Guinea Pig",
+        "criterions": [6, 7, 5, 7],
+        "URL": "https://www.rspca.org.uk/adviceandwelfare/pets/rodents/guineapigs",
+        "avgRating": 6.3
       }
     ],
     "Cool Cars": [
@@ -160,6 +188,20 @@
         "criterions": [9, 9, 8, 7],
         "URL": "https://www.porsche.com/usa/models/911/",
         "avgRating": 8.3
+      },
+      {
+        "id": 6,
+        "name": "Ferrari 488",
+        "criterions": [10, 9, 9, 8],
+        "URL": "https://www.ferrari.com/en-US/auto/488-gtb",
+        "avgRating": 9.0
+      },
+      {
+        "id": 7,
+        "name": "Lamborghini Huracan",
+        "criterions": [10, 9, 9, 8],
+        "URL": "https://www.lamborghini.com/en-en/models/huracan",
+        "avgRating": 8.9
       }
     ],
     "Best Games": [
@@ -197,6 +239,20 @@
         "criterions": [9, 9, 9, 9],
         "URL": "https://www.zelda.com/",
         "avgRating": 9.0
+      },
+      {
+        "id": 6,
+        "name": "God of War",
+        "criterions": [9, 9, 8, 9],
+        "URL": "https://www.godofwar.playstation.com/",
+        "avgRating": 8.8
+      },
+      {
+        "id": 7,
+        "name": "Horizon Zero Dawn",
+        "criterions": [8, 8, 7, 8],
+        "URL": "https://www.playstation.com/en-us/games/horizon-zero-dawn/",
+        "avgRating": 7.8
       }
     ],
     "Actors": [
@@ -234,7 +290,21 @@
         "criterions": [9, 9, 8, 9],
         "URL": "https://www.imdb.com/name/nm2225369/",
         "avgRating": 8.8
-      }
+      },
+      {
+       "id": 6,
+       "name": "Chris Hemsworth",
+      "criterions": [8, 9, 8, 8],
+    "URL": "https://www.imdb.com/name/nm1165110/",
+    "avgRating": 8.3
+  },
+  {
+    "id": 7,
+    "name": "Emma Watson",
+    "criterions": [8, 8, 8, 9],
+    "URL": "https://www.imdb.com/name/nm0914612/",
+    "avgRating": 8.3
+  }
     ]
   },
   "criteriaByCategory": {
