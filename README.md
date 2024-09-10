@@ -4,14 +4,12 @@ This repository contains the backend for the **Ranker** project, a web applicati
 
 ## Table of Contents
 
-- [Uniqueness](#uniqueness)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [API Endpoints](#api-endpoints)
 - [Screenshots & Videos](#screenshots--videos)
 - [Installation](#installation)
 - [Available Scripts](#available-scripts)
-- [Acknowledgements](#acknowledgements)
 
 ## Uniqueness
 
