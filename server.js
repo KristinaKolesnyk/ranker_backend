@@ -26,6 +26,7 @@ const db = knex({
         port: 5432,
         password: '13346939',
         database: 'rankerdb'
+=======
     }
 })
 
